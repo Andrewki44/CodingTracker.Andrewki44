@@ -6,13 +6,11 @@ namespace CodingTacker.Andrewki44
     {
         static void Main(string[] args)
         {
-            
-
             do
             {
-                string menu = Menu.MainMenu();
+                //string menu = Menu.MainMenu();
 
-                switch (menu)
+                switch (Menu.MainMenu())
                 {
                     case "Start a Session":
                         {
@@ -24,7 +22,7 @@ namespace CodingTacker.Andrewki44
                             }
                             catch (Exception e)
                             {
-                                Menu.ErrorMenu(e);
+                                Validation.SaveSessionError(e);
                             }
                         }
                         break;
@@ -39,15 +37,38 @@ namespace CodingTacker.Andrewki44
                             }
                             catch (Exception e)
                             {
-                                Menu.ErrorMenu(e);
+                                Validation.SaveSessionError(e);
                             }
                         }
                         break;
 
                     case "Reports":
+                        switch (Menu.ReportMenu()) 
+                        {
+                            case "View Logs":
+                                try
+                                {
+                                    CodingSession log = Menu.LogMenu(SQLite.GetCodingSessions());
+                                    try
+                                    {
+                                        Menu.ActionMenu(log);
+                                    }
+                                    catch(Exception e)
+                                    {
+
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    Validation.GetSessionsError(e);
+                                }
+                                break;
+
+                            case "Return to Main Menu":
+                                continue;
+                        }
                         break;
                 }
-
             } while (true);
         }
     }

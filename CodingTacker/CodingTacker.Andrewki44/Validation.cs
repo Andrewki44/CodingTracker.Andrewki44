@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using Spectre.Console;
+using System.Globalization;
 
 namespace CodingTacker.Andrewki44
 {
@@ -12,5 +13,20 @@ namespace CodingTacker.Andrewki44
                 return false;
         }
 
+        public static void SaveSessionError(Exception e)
+        {
+            AnsiConsole.MarkupLine("Failed to save session...");
+            AnsiConsole.MarkupLine(e.Message);
+            AnsiConsole.MarkupLine("Press Enter to return to menu...");
+            Console.ReadLine();
+        }
+
+        public static void GetSessionsError(Exception e)
+        {
+            AnsiConsole.MarkupLine("Failed to retrieve sessions...");
+            AnsiConsole.MarkupLine(e.Message);
+            AnsiConsole.MarkupLine("Press Enter to return to menu...");
+            Console.ReadLine();
+        }
     }
 }

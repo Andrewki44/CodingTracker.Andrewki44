@@ -4,9 +4,14 @@ namespace CodingTacker.Andrewki44
 {
     class CodingSession
     {
-        public DateTime? sessionStart { get; private set; }
-        public DateTime? sessionEnd { get; private set; }
-        public TimeSpan duration { get; private set; }
+        public DateTime? sessionStart { get; set; }
+        public DateTime? sessionEnd { get; set; }
+        public TimeSpan duration { get; set; }
+        public double seconds
+        {
+            get { return duration.TotalSeconds; }
+            set { duration = new TimeSpan(0, 0, (int)value); }
+        }
 
         public CodingSession()
         {
@@ -48,7 +53,7 @@ namespace CodingTacker.Andrewki44
             
             //Setup table
             Table table = new Table()
-                .Title("[bold green]Coding Session[/]")
+                .Title("[red]~ Coding Session ~[/]")
                 .Caption("[italic grey]Press Enter to stop the session...[/]")
                 .AddColumn("Session Start")
                 .AddColumn("Duration")

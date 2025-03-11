@@ -18,12 +18,41 @@ namespace CodingTacker.Andrewki44
             );
         }
 
-        public static void ErrorMenu(Exception e)
+        public static string ReportMenu()
         {
-            AnsiConsole.MarkupLine("Failed to save session...");
-            AnsiConsole.MarkupLine(e.Message);
-            AnsiConsole.MarkupLine("Press Enter to return to menu...");
-            Console.ReadLine();
+            Console.Clear();
+
+            return AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("[bold red]~~ Reports Menu ~~[/]")
+                    .PageSize(5)
+                    .HighlightStyle(new Style().Foreground(Color.Green))
+                    .AddChoices(reportOptions)
+            );
+        }
+
+        public static CodingSession LogMenu(List<CodingSession> sessions)
+        {
+            Console.Clear();
+
+            return AnsiConsole.Prompt(
+                new SelectionPrompt<CodingSession>()
+                    .Title("[red]~ Log Menu ~[/]")
+                    .PageSize(10)
+                    .HighlightStyle(new Style().Foreground(Color.Green))
+                    .AddChoices(sessions)
+                    .UseConverter(sess =>
+                    {
+                        return "[blue]Start: " + sess.sessionStart.Value.ToString("yyyy-MM-dd HH:mm:ss") + " [/]| " +
+                        "[blue]End: " + sess.sessionEnd.Value.ToString("yyyy-MM-dd HH:mm:ss") + " [/]| " +
+                        "[blue]Duration: " + sess.duration.ToString() + "[/]";
+                    })
+            );
+        }
+
+        public static void ActionMenu(CodingSession session)
+        {
+
         }
 
         public static bool ConfirmSave(CodingSession session)
@@ -52,7 +81,7 @@ namespace CodingTacker.Andrewki44
             //Get startTime with validation
             DateTime startTime = DateTime.ParseExact(
                 AnsiConsole.Prompt(
-                    new TextPrompt<string>("[bold green]Enter your session start time [grey](yyyy-MM-dd HH:mm:ss)[/]:[/]")
+                    new TextPrompt<string>("Enter your session start time [grey](yyyy-MM-dd HH:mm:ss)[/]:")
                         .Validate(n => Validation.ValidateDateTimeExact(n))
                         .ValidationErrorMessage("[red]Input is not a valid DateTime[/]")
                 ),
@@ -62,7 +91,7 @@ namespace CodingTacker.Andrewki44
             //Get endTime with validation
             DateTime endTime = DateTime.ParseExact(
                 AnsiConsole.Prompt(
-                    new TextPrompt<string>("[bold green]Enter your session end time [grey](yyyy-MM-dd HH:mm:ss | blank = Now)[/]:[/]")
+                    new TextPrompt<string>("Enter your session end time [grey](yyyy-MM-dd HH:mm:ss | blank = Now)[/]:")
                         .DefaultValue(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))
                         .HideDefaultValue()
                         .Validate(n => Validation.ValidateDateTimeExact(n))
@@ -79,6 +108,12 @@ namespace CodingTacker.Andrewki44
             "Start a Session",
             "Manually Record a Session",
             "Reports"
+        };
+
+        private static string[] reportOptions = new string[] 
+        { 
+            "View Logs",
+            "Return to Main Menu"
         };
     }
 }
