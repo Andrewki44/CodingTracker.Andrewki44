@@ -14,7 +14,7 @@ namespace CodingTacker.Andrewki44
                     .Title("[bold red]~~~ Main Menu ~~~[/]")
                     .PageSize(5)
                     .HighlightStyle(new Style().Foreground(Color.Green))
-                    .AddChoices(menuOptions)
+                    .AddChoices(mainMenuOptions)
             );
         }
 
@@ -34,19 +34,25 @@ namespace CodingTacker.Andrewki44
         public static CodingSession LogMenu(List<CodingSession> sessions)
         {
             Console.Clear();
+            sessions.Add(new CodingSession());
 
             return AnsiConsole.Prompt(
                 new SelectionPrompt<CodingSession>()
                     .Title("[red]~ Log Menu ~[/]")
                     .PageSize(10)
+                    .MoreChoicesText("[grey] Arrow down for more options...[/]")
                     .HighlightStyle(new Style().Foreground(Color.Green))
                     .AddChoices(sessions)
                     .UseConverter(sess =>
                     {
-                        return "[blue]Start: " + sess.sessionStart.Value.ToString("yyyy-MM-dd HH:mm:ss") + " [/]| " +
-                        "[blue]End: " + sess.sessionEnd.Value.ToString("yyyy-MM-dd HH:mm:ss") + " [/]| " +
-                        "[blue]Duration: " + sess.duration.ToString() + "[/]";
+                        if (sess.sessionStart.HasValue && sess.sessionEnd.HasValue)
+                            return "[blue]Start: " + sess.sessionStart.Value.ToString("yyyy-MM-dd HH:mm:ss") + " [/]| " +
+                            "[blue]End: " + sess.sessionEnd.Value.ToString("yyyy-MM-dd HH:mm:ss") + " [/]| " +
+                            "[blue]Duration: " + sess.duration.ToString() + "[/]";
+                        else
+                            return "[red]Return to the Main Menu[/]";
                     })
+                    
             );
         }
 
@@ -103,11 +109,12 @@ namespace CodingTacker.Andrewki44
             return (startTime, endTime);
         }
 
-        private static string[] menuOptions = new string[]
+        private static string[] mainMenuOptions = new string[]
         {
             "Start a Session",
             "Manually Record a Session",
-            "Reports"
+            "Reports",
+            "Exit"
         };
 
         private static string[] reportOptions = new string[] 

@@ -8,7 +8,10 @@ namespace CodingTacker.Andrewki44
         {
             do
             {
-                //string menu = Menu.MainMenu();
+                /* TODO:
+                 * Menu.ActionMenu() - Update / Delete logs
+                 * Other Reports
+                 */
 
                 switch (Menu.MainMenu())
                 {
@@ -49,13 +52,20 @@ namespace CodingTacker.Andrewki44
                                 try
                                 {
                                     CodingSession log = Menu.LogMenu(SQLite.GetCodingSessions());
-                                    try
-                                    {
-                                        Menu.ActionMenu(log);
-                                    }
-                                    catch(Exception e)
-                                    {
 
+                                    //if null CodingSession, return to Main Menu
+                                    if (!log.sessionStart.HasValue)
+                                        break;
+                                    else
+                                    {
+                                        try
+                                        {
+                                            Menu.ActionMenu(log);
+                                        }
+                                        catch (Exception e)
+                                        {
+
+                                        }
                                     }
                                 }
                                 catch (Exception e)
@@ -68,6 +78,9 @@ namespace CodingTacker.Andrewki44
                                 continue;
                         }
                         break;
+
+                    case "Exit":
+                        return;
                 }
             } while (true);
         }
