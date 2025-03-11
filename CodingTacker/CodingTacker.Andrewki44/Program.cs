@@ -1,5 +1,4 @@
-﻿using System.Configuration;
-using Spectre.Console;
+﻿using Spectre.Console;
 
 namespace CodingTacker.Andrewki44
 {
@@ -7,36 +6,49 @@ namespace CodingTacker.Andrewki44
     {
         static void Main(string[] args)
         {
-            //var confirmation = AnsiConsole.Prompt(
-            //new TextPrompt<bool>("Run prompt example?")
-            //    .AddChoice(true)
-            //    .AddChoice(false)
-            //    .DefaultValue(true)
-            //    .WithConverter(choice => choice ? "y" : "n"));
-
-            //// Echo the confirmation back to the terminal
-            //Console.WriteLine(confirmation ? "Confirmed" : "Declined");
+            
 
             do
             {
-                string menu = UserInput.MainMenu();
+                string menu = Menu.MainMenu();
 
-                AnsiConsole.MarkupLine(menu);
-                Console.WriteLine(menu);
-                //Console.ReadLine();
+                switch (menu)
+                {
+                    case "Start a Session":
+                        {
+                            try
+                            {
+                                CodingSession session = new CodingSession().StartSession();
+                                if (Menu.ConfirmSave(session))
+                                    SQLite.SaveCodingSession(session);
+                            }
+                            catch (Exception e)
+                            {
+                                Menu.ErrorMenu(e);
+                            }
+                        }
+                        break;
+
+                    case "Manually Record a Session":
+                        {
+                            try
+                            {
+                                CodingSession session = new CodingSession().ManualSession();
+                                if (Menu.ConfirmSave(session))
+                                    SQLite.SaveCodingSession(session);
+                            }
+                            catch (Exception e)
+                            {
+                                Menu.ErrorMenu(e);
+                            }
+                        }
+                        break;
+
+                    case "Reports":
+                        break;
+                }
+
             } while (true);
-            
-
-
-            //CodingSession session = new CodingSession();
-            //System.Threading.Thread.Sleep(5000);
-            //session.SetSessionEnd(DateTime.Now);
-
-            //SQLite.SaveCodingSession(session);
-
-
-            //// Echo the fruit back to the terminal
-            //AnsiConsole.WriteLine($"I agree. {fruit} is tasty!");
         }
     }
 }
