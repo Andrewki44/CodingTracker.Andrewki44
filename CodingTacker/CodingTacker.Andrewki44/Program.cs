@@ -53,7 +53,7 @@ namespace CodingTacker.Andrewki44
                                     CodingSession log = Menu.LogMenu(SQLite.GetCodingSessions());
 
                                     //if null CodingSession, return to Main Menu
-                                    if (log.sessionStart.HasValue)
+                                    if (log.SessionStart.HasValue)
                                         try
                                         {
                                             switch (Menu.ActionMenu(log))

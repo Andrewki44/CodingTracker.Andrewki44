@@ -45,10 +45,10 @@ namespace CodingTacker.Andrewki44
                     .AddChoices(sessions)
                     .UseConverter(sess =>
                     {
-                        if (sess.sessionStart.HasValue && sess.sessionEnd.HasValue)
-                            return "[blue]Start: " + sess.sessionStart.Value.ToString("yyyy-MM-dd HH:mm:ss") + " [/]| " +
-                            "[blue]End: " + sess.sessionEnd.Value.ToString("yyyy-MM-dd HH:mm:ss") + " [/]| " +
-                            "[blue]Duration: " + sess.duration.ToString() + "[/]";
+                        if (sess.SessionStart.HasValue && sess.SessionEnd.HasValue)
+                            return "[blue]Start: " + sess.SessionStart.Value.ToString("yyyy-MM-dd HH:mm:ss") + " [/]| " +
+                            "[blue]End: " + sess.SessionEnd.Value.ToString("yyyy-MM-dd HH:mm:ss") + " [/]| " +
+                            "[blue]Duration: " + sess.Duration.ToString() + "[/]";
                         else
                             return "[red]Return to the Reports Menu[/]";
                     })
@@ -74,7 +74,7 @@ namespace CodingTacker.Andrewki44
         {
             bool confirmation =  AnsiConsole.Prompt(
                 new TextPrompt<bool>("[blue]Save Session with duration: " +
-                    $"{TimeSpan.FromSeconds(Math.Round(session.duration.TotalSeconds)).ToString()}?[/]")
+                    $"{TimeSpan.FromSeconds(Math.Round(session.Duration.TotalSeconds)).ToString()}?[/]")
                     .AddChoice(true)
                     .AddChoice(false)
                     .DefaultValue(true)
@@ -92,7 +92,7 @@ namespace CodingTacker.Andrewki44
         {
             bool confirmation = AnsiConsole.Prompt(
                 new TextPrompt<bool>("[blue]Delete Session with duration: " +
-                    $"{TimeSpan.FromSeconds(Math.Round(session.duration.TotalSeconds)).ToString()}?[/]")
+                    $"{TimeSpan.FromSeconds(Math.Round(session.Duration.TotalSeconds)).ToString()}?[/]")
                     .AddChoice(true)
                     .AddChoice(false)
                     .DefaultValue(true)

@@ -1,26 +1,25 @@
-﻿using System.Configuration;
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
 using Dapper;
 
 namespace CodingTacker.Andrewki44
 {
     static class SQLite
     {
-        private static string dbFile { 
+        private static string DbFile { 
             get 
             {
-                string? dbPath = ConfigurationManager.AppSettings.Get("Data Source");
+                string? dbPath = System.Configuration.ConfigurationManager.AppSettings.Get("Data Source");
                 if (dbPath != null)
                     return Environment.CurrentDirectory + dbPath;
                 else
                     return Environment.CurrentDirectory + "\\CodingDefault.db";
              }
         }
-        private static string foreignKeys
+        private static string ForeignKeys
         {
             get
             {
-                string? foreignKeys = ConfigurationManager.AppSettings.Get("Foreign Keys");
+                string? foreignKeys = System.Configuration.ConfigurationManager.AppSettings.Get("Foreign Keys");
                 if (foreignKeys != null)
                     return foreignKeys;
                 else
@@ -31,7 +30,7 @@ namespace CodingTacker.Andrewki44
 
         public static void InsertCodingSession(CodingSession session)
         {
-            if (!File.Exists(dbFile))
+            if (!File.Exists(DbFile))
                 CreateDatabase();
 
             string commandText = @"
@@ -47,7 +46,7 @@ namespace CodingTacker.Andrewki44
 
         public static void UpdateCodingSession(CodingSession log, CodingSession session)
         {
-            if (!File.Exists(dbFile))
+            if (!File.Exists(DbFile))
                 CreateDatabase();
 
             string commandText = @"
@@ -60,9 +59,9 @@ namespace CodingTacker.Andrewki44
 
             CodingSession updateSession = new CodingSession();
             
-            if (session.sessionStart.HasValue && session.sessionEnd.HasValue)
+            if (session.SessionStart.HasValue && session.SessionEnd.HasValue)
             {
-                updateSession = new CodingSession(session.sessionStart.Value, session.sessionEnd.Value);
+                updateSession = new CodingSession(session.SessionStart.Value, session.SessionEnd.Value);
                 updateSession.ID = log.ID;
             }
 
@@ -74,7 +73,7 @@ namespace CodingTacker.Andrewki44
 
         public static void DeleteCodingSession(CodingSession session)
         {
-            if (!File.Exists(dbFile))
+            if (!File.Exists(DbFile))
                 CreateDatabase();
 
             string commandText = @"
@@ -90,7 +89,7 @@ namespace CodingTacker.Andrewki44
 
         public static List<CodingSession> GetCodingSessions()
         {
-            if (!File.Exists(dbFile))
+            if (!File.Exists(DbFile))
                 CreateDatabase();
 
             string commandText = @"
@@ -101,13 +100,13 @@ namespace CodingTacker.Andrewki44
 
             using (SqliteConnection conn = DbConnection())
             {
-                return conn.Query<CodingSession>(commandText).ToList()
-;           }
+                return conn.Query<CodingSession>(commandText).ToList();
+            }
         }
 
         private static SqliteConnection DbConnection()
         {
-            return new SqliteConnection("Data Source = " + dbFile + "; Foreign Keys = " + foreignKeys);
+            return new SqliteConnection("Data Source = " + DbFile + "; Foreign Keys = " + ForeignKeys);
         }
 
         private static void CreateDatabase()

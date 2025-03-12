@@ -5,13 +5,13 @@ namespace CodingTacker.Andrewki44
     class CodingSession
     {
         public int ID { get; set; }
-        public DateTime? sessionStart { get; set; }
-        public DateTime? sessionEnd { get; set; }
-        public TimeSpan duration { get; set; }
-        public double seconds
+        public DateTime? SessionStart { get; set; }
+        public DateTime? SessionEnd { get; set; }
+        public TimeSpan Duration { get; set; }
+        public double Seconds
         {
-            get { return duration.TotalSeconds; }
-            set { duration = new TimeSpan(0, 0, (int)value); }
+            get { return Duration.TotalSeconds; }
+            set { Duration = new TimeSpan(0, 0, (int)value); }
         }
 
         public CodingSession()
@@ -20,28 +20,28 @@ namespace CodingTacker.Andrewki44
 
         public CodingSession(DateTime sessionStart)
         {
-            this.sessionStart = sessionStart;
+            this.SessionStart = sessionStart;
         }
         
         public CodingSession(DateTime sessionStart, DateTime sessionEnd)
         {
-            this.sessionStart = sessionStart;
-            this.sessionEnd = sessionEnd;
-            this.duration = CalculateDuration();
+            this.SessionStart = sessionStart;
+            this.SessionEnd = sessionEnd;
+            this.Duration = CalculateDuration();
         }
 
         public void SetSessionStart(DateTime sessionStart)
         {
-            this.sessionStart = sessionStart;
-            if (this.sessionEnd.HasValue)
-                this.duration = CalculateDuration();
+            this.SessionStart = sessionStart;
+            if (this.SessionEnd.HasValue)
+                this.Duration = CalculateDuration();
         }
 
         public void SetSessionEnd(DateTime sessionEnd)
         {
-            this.sessionEnd = sessionEnd;
-            if (this.sessionStart.HasValue)
-                this.duration = CalculateDuration();
+            this.SessionEnd = sessionEnd;
+            if (this.SessionStart.HasValue)
+                this.Duration = CalculateDuration();
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace CodingTacker.Andrewki44
         /// <returns></returns>
         public CodingSession StartSession()
         {
-            this.sessionStart = DateTime.Now;
+            this.SessionStart = DateTime.Now;
             
             //Setup table
             Table table = new Table()
@@ -60,18 +60,18 @@ namespace CodingTacker.Andrewki44
                 .AddColumn("Duration")
                 .Width(40);
 
-            //Display live duration of session, until complete
+            //Display live Duration of session, until complete
             AnsiConsole.Live(table).AutoClear(false).Start(ctx =>
             {
                 table.AddRow(
-                        new Text(this.sessionStart.Value.ToLongTimeString()),
+                        new Text(this.SessionStart.Value.ToLongTimeString()),
                         new Text("")
                     );
 
                 //Keep looping until Enter is pressed
                 while (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Enter))
                 {
-                    //Update duration cell with TimeSpan
+                    //Update Duration cell with TimeSpan
                     table.UpdateCell(0, 1, CalculateDuration(DateTime.Now).ToString());                    
                     ctx.Refresh();
                 }
@@ -96,27 +96,27 @@ namespace CodingTacker.Andrewki44
         }
         
         /// <summary>
-        /// Calculate duration based on sessionStart & sessionEnd
+        /// Calculate Duration based on SessionStart & SessionEnd
         /// </summary>
         /// <returns></returns>
         private TimeSpan CalculateDuration()
         {
-            if (this.sessionStart.HasValue && this.sessionEnd.HasValue)
+            if (this.SessionStart.HasValue && this.SessionEnd.HasValue)
                 //Round to the second
-                return TimeSpan.FromSeconds(Math.Round((this.sessionEnd.Value - this.sessionStart.Value).TotalSeconds));
+                return TimeSpan.FromSeconds(Math.Round((this.SessionEnd.Value - this.SessionStart.Value).TotalSeconds));
             else
                 return TimeSpan.Zero;
         }
 
         /// <summary>
-        /// Calculate duration based on sessionStart & timeToCompare
+        /// Calculate Duration based on SessionStart & timeToCompare
         /// </summary>
         /// <param name="timeToCompare"></param>
         /// <returns></returns>
         private TimeSpan CalculateDuration(DateTime timeToCompare)
         {
-            if (this.sessionStart.HasValue)
-                return TimeSpan.FromSeconds(Math.Round((timeToCompare - this.sessionStart.Value).TotalSeconds));
+            if (this.SessionStart.HasValue)
+                return TimeSpan.FromSeconds(Math.Round((timeToCompare - this.SessionStart.Value).TotalSeconds));
             else
                 return TimeSpan.Zero;
         }
