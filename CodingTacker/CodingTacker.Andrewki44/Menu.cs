@@ -40,7 +40,7 @@ namespace CodingTacker.Andrewki44
                 new SelectionPrompt<CodingSession>()
                     .Title("[red]~ Log Menu ~[/]")
                     .PageSize(10)
-                    .MoreChoicesText("[grey] Arrow down for more options...[/]")
+                    .MoreChoicesText("[grey]Arrow down for more options...[/]")
                     .HighlightStyle(new Style().Foreground(Color.Green))
                     .AddChoices(sessions)
                     .UseConverter(sess =>
@@ -50,13 +50,53 @@ namespace CodingTacker.Andrewki44
                             "[blue]End: " + sess.sessionEnd.Value.ToString("yyyy-MM-dd HH:mm:ss") + " [/]| " +
                             "[blue]Duration: " + sess.duration.ToString() + "[/]";
                         else
-                            return "[red]Return to the Main Menu[/]";
+                            return "[red]Return to the Reports Menu[/]";
                     })
                     
             );
         }
 
-        public static void ActionMenu(CodingSession session)
+        public static string ActionMenu(CodingSession session)
+        {
+            Console.Clear();
+
+            return AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("[red]~ Action Menu ~[/]")
+                    .PageSize(5)
+                    .MoreChoicesText("[grey]Arrow down for more options...[/]")
+                    .HighlightStyle(new Style().Foreground(Color.Green))
+                    .AddChoices(actionOptions)
+            );
+        }
+
+        public static void UpdateLogMenu(CodingSession session)
+        {
+            Console.Clear();
+
+            AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("[red]~ Update Log Menu ~[/]")
+                    .PageSize(5)
+                    .AddChoices(new[] { 
+                            "startTime", "endTime", "duration"
+                    })
+                    .UseConverter(n =>
+                    {
+                        if (session.sessionStart.HasValue && session.sessionEnd.HasValue)
+                            if (n == "startTime")
+                                return $"Start: {session.sessionStart.Value.ToString("yyyy-MM-dd HH:mm:ss")}";
+                            else if (n == "endTime")
+                                return $"End: {session.sessionStart.Value.ToString("yyyy-MM-dd HH:mm:ss")}";
+                            else
+                                return $"Duration: {session.sessionStart.Value.ToString("yyyy-MM-dd HH:mm:ss")}";
+                        else
+                            return n;
+                    })                    
+            );
+        }
+
+        public static void DeleteLogMenu(CodingSession session)
         {
 
         }
@@ -114,13 +154,20 @@ namespace CodingTacker.Andrewki44
             "Start a Session",
             "Manually Record a Session",
             "Reports",
-            "Exit"
+            "[red]Exit[/]"
         };
 
         private static string[] reportOptions = new string[] 
         { 
             "View Logs",
-            "Return to Main Menu"
+            "[red]Return to Main Menu[/]"
+        };
+
+        private static string[] actionOptions = new string[]
+        {
+            "Update Log",
+            "Delete Log",
+            "[red]Return to Log Menu[/]"
         };
     }
 }

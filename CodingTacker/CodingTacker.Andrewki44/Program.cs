@@ -13,6 +13,7 @@ namespace CodingTacker.Andrewki44
                  * Other Reports
                  */
 
+                MainMenu:
                 switch (Menu.MainMenu())
                 {
                     case "Start a Session":
@@ -46,27 +47,38 @@ namespace CodingTacker.Andrewki44
                         break;
 
                     case "Reports":
-                        switch (Menu.ReportMenu()) 
+                        ReportsMenu:
+                        switch (Menu.ReportMenu())
                         {
                             case "View Logs":
+                            LogMenu:
                                 try
                                 {
                                     CodingSession log = Menu.LogMenu(SQLite.GetCodingSessions());
 
                                     //if null CodingSession, return to Main Menu
-                                    if (!log.sessionStart.HasValue)
-                                        break;
-                                    else
-                                    {
+                                    if (log.sessionStart.HasValue)
                                         try
                                         {
-                                            Menu.ActionMenu(log);
+                                            switch (Menu.ActionMenu(log))
+                                            {
+                                                case "Update Log":
+                                                    Menu.UpdateLogMenu(log);
+                                                    break;
+
+                                                case "Delete Log":
+                                                    break;
+
+                                                case "[red]Return to Log Menu[/]":
+                                                    goto LogMenu;
+                                            }
                                         }
                                         catch (Exception e)
                                         {
-
+                                            Validation.LogActionError(e);
                                         }
-                                    }
+                                    else
+                                        goto ReportsMenu;
                                 }
                                 catch (Exception e)
                                 {
@@ -74,12 +86,12 @@ namespace CodingTacker.Andrewki44
                                 }
                                 break;
 
-                            case "Return to Main Menu":
-                                continue;
+                            case "[red]Return to Main Menu[/]":
+                                goto MainMenu;
                         }
                         break;
 
-                    case "Exit":
+                    case "[red]Exit[/]":
                         return;
                 }
             } while (true);

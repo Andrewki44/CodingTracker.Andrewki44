@@ -28,5 +28,13 @@ namespace CodingTacker.Andrewki44
             AnsiConsole.MarkupLine("Press Enter to return to menu...");
             Console.ReadLine();
         }
+
+        public static void LogActionError(Exception e)
+        {
+            AnsiConsole.MarkupLine("Log action failed...");
+            AnsiConsole.MarkupLine(e.Message);
+            AnsiConsole.MarkupLine("Press Enter to return to menu...");
+            Console.ReadLine();
+        }
     }
 }
