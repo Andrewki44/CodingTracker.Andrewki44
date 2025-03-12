@@ -29,7 +29,7 @@ namespace CodingTacker.Andrewki44
             }
         }
 
-        public static void SaveCodingSession(CodingSession session)
+        public static void InsertCodingSession(CodingSession session)
         {
             if (!File.Exists(dbFile))
                 CreateDatabase();
@@ -45,13 +45,56 @@ namespace CodingTacker.Andrewki44
             }
         }
 
+        public static void UpdateCodingSession(CodingSession log, CodingSession session)
+        {
+            if (!File.Exists(dbFile))
+                CreateDatabase();
+
+            string commandText = @"
+                UPDATE CodingSession
+                SET Start = @sessionStart,
+                    End = @sessionEnd,
+                    Duration = @seconds
+                WHERE ID = @ID
+            ;";
+
+            CodingSession updateSession = new CodingSession();
+            
+            if (session.sessionStart.HasValue && session.sessionEnd.HasValue)
+            {
+                updateSession = new CodingSession(session.sessionStart.Value, session.sessionEnd.Value);
+                updateSession.ID = log.ID;
+            }
+
+            using (SqliteConnection conn = DbConnection())
+            {
+                conn.Execute(commandText, updateSession);
+            }
+        }
+
+        public static void DeleteCodingSession(CodingSession session)
+        {
+            if (!File.Exists(dbFile))
+                CreateDatabase();
+
+            string commandText = @"
+                DELETE FROM CodingSession
+                WHERE ID = @ID
+            ;";
+
+            using (SqliteConnection conn = DbConnection())
+            {
+                conn.Execute(commandText, session);
+            }
+        }
+
         public static List<CodingSession> GetCodingSessions()
         {
             if (!File.Exists(dbFile))
                 CreateDatabase();
 
             string commandText = @"
-                SELECT Start AS sessionStart, End AS sessionEnd, Duration AS Seconds
+                SELECT ID AS ID, Start AS sessionStart, End AS sessionEnd, Duration AS Seconds
                 FROM CodingSession
                 ORDER BY ID
             ;";

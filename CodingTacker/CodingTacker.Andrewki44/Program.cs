@@ -8,10 +8,6 @@ namespace CodingTacker.Andrewki44
         {
             do
             {
-                /* TODO:
-                 * Menu.ActionMenu() - Update / Delete logs
-                 * Other Reports
-                 */
 
                 MainMenu:
                 switch (Menu.MainMenu())
@@ -22,7 +18,7 @@ namespace CodingTacker.Andrewki44
                             {
                                 CodingSession session = new CodingSession().StartSession();
                                 if (Menu.ConfirmSave(session))
-                                    SQLite.SaveCodingSession(session);
+                                    SQLite.InsertCodingSession(session);
                             }
                             catch (Exception e)
                             {
@@ -37,7 +33,7 @@ namespace CodingTacker.Andrewki44
                             {
                                 CodingSession session = new CodingSession().ManualSession();
                                 if (Menu.ConfirmSave(session))
-                                    SQLite.SaveCodingSession(session);
+                                    SQLite.InsertCodingSession(session);
                             }
                             catch (Exception e)
                             {
@@ -63,11 +59,15 @@ namespace CodingTacker.Andrewki44
                                             switch (Menu.ActionMenu(log))
                                             {
                                                 case "Update Log":
-                                                    Menu.UpdateLogMenu(log);
-                                                    break;
+                                                    CodingSession session = new CodingSession().ManualSession();
+                                                    if (Menu.ConfirmSave(session))
+                                                        SQLite.UpdateCodingSession(log, session);
+                                                    goto LogMenu;
 
                                                 case "Delete Log":
-                                                    break;
+                                                    if (Menu.ConfirmDelete(log))
+                                                        SQLite.DeleteCodingSession(log);
+                                                    goto LogMenu;
 
                                                 case "[red]Return to Log Menu[/]":
                                                     goto LogMenu;

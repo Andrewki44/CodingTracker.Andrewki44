@@ -70,42 +70,11 @@ namespace CodingTacker.Andrewki44
             );
         }
 
-        public static void UpdateLogMenu(CodingSession session)
-        {
-            Console.Clear();
-
-            AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
-                    .Title("[red]~ Update Log Menu ~[/]")
-                    .PageSize(5)
-                    .AddChoices(new[] { 
-                            "startTime", "endTime", "duration"
-                    })
-                    .UseConverter(n =>
-                    {
-                        if (session.sessionStart.HasValue && session.sessionEnd.HasValue)
-                            if (n == "startTime")
-                                return $"Start: {session.sessionStart.Value.ToString("yyyy-MM-dd HH:mm:ss")}";
-                            else if (n == "endTime")
-                                return $"End: {session.sessionStart.Value.ToString("yyyy-MM-dd HH:mm:ss")}";
-                            else
-                                return $"Duration: {session.sessionStart.Value.ToString("yyyy-MM-dd HH:mm:ss")}";
-                        else
-                            return n;
-                    })                    
-            );
-        }
-
-        public static void DeleteLogMenu(CodingSession session)
-        {
-
-        }
-
         public static bool ConfirmSave(CodingSession session)
         {
             bool confirmation =  AnsiConsole.Prompt(
                 new TextPrompt<bool>("[blue]Save Session with duration: " +
-                    $"{TimeSpan.FromSeconds(Math.Round(session.duration.TotalSeconds))}?[/]")
+                    $"{TimeSpan.FromSeconds(Math.Round(session.duration.TotalSeconds)).ToString()}?[/]")
                     .AddChoice(true)
                     .AddChoice(false)
                     .DefaultValue(true)
@@ -116,6 +85,24 @@ namespace CodingTacker.Andrewki44
             AnsiConsole.Markup((confirmation ? "[green]" : "[red]") + "Press Enter to return to the menu:[/]");
             Console.ReadLine();
             
+            return confirmation;
+        }
+
+        public static bool ConfirmDelete(CodingSession session)
+        {
+            bool confirmation = AnsiConsole.Prompt(
+                new TextPrompt<bool>("[blue]Delete Session with duration: " +
+                    $"{TimeSpan.FromSeconds(Math.Round(session.duration.TotalSeconds)).ToString()}?[/]")
+                    .AddChoice(true)
+                    .AddChoice(false)
+                    .DefaultValue(true)
+                    .WithConverter(choice => choice ? "y" : "n"));
+
+            //Show confirmation
+            AnsiConsole.MarkupLine(confirmation ? "[green]Confirmed[/]" : "[red]Declined[/]");
+            AnsiConsole.Markup((confirmation ? "[green]" : "[red]") + "Press Enter to return to the menu:[/]");
+            Console.ReadLine();
+
             return confirmation;
         }
 

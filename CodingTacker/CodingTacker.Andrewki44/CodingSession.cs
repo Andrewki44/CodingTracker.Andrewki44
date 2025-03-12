@@ -4,6 +4,7 @@ namespace CodingTacker.Andrewki44
 {
     class CodingSession
     {
+        public int ID { get; set; }
         public DateTime? sessionStart { get; set; }
         public DateTime? sessionEnd { get; set; }
         public TimeSpan duration { get; set; }
